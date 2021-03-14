@@ -13,3 +13,8 @@ Exemple :
 
 Extrait chacune des pages d'un fichier PDF en un fichier distinct. Les fichiers seront de la forme output1.pdf, output2.pdf, etc. Utilisation :
 ```py pdf_extract.py pdftosplit.pdf```
+On peut également spécifier le format de sortie du fichier (par défaut output\*.pdf). Les étoiles seront remplacées par le numéro de la page extraite (si plusieurs étoiles sont à la suite, ceci indique la longueur minimale du nombre souhaité, et des zéros non significatifs seront ajoutés).
+
+Exemple :
+```'py pdf_extract.py pdftosplit.pdf pdf_extrait_numero**.pdf'```
+Afichera les fichiers pdf_extrait_numero01.pdf, pdf_extrait_numero02.pdf, etc.
