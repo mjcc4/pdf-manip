@@ -24,8 +24,10 @@ def print_help():
     print('   OU : py pdf_merge.py -s pdf*.pdf 1 10 [-o mergedpdf.pdf]')
     print('Options')
     print('-o/-output : Nom du fichier de sortie souhaité. Si non spécifié, ce sera merged.pdf')
-    print('-s/-sequence : Définit une séquence de fichiers.', 
+    print('-s/-sequence motifsequence debut fin : Définit une séquence de fichiers.', 
+    'Les * de motifsequence seront remplacées par le numero de la sequence (avec zeros non significatif si plusieurs *)'
     'La commande mypdfseq**.pdf 1 100 va générer la liste mypdfseq01.pdf jusqu\'à mypdfseq100.pdf')
+    print('Attention : selon votre terminal, il faudra échapper le caractère * avec \\ avant de l\'utiliser')
 
 
 def lire_sysargs():
@@ -58,11 +60,42 @@ def lire_sysargs():
             if (optionsLues["sequence"]):
                 print("L'option -sequence/-s ne doit être utilisée qu'1 fois")
                 return {"demarrerTraitement": False}
-            numArgLu += 1
-            if (numArgLu >= nb_args):
-                print("Veuillez spécifier un nom de fichier après -sequence")
+            if (numArgLu+3 >= nb_args):
+                print("Veuillez spécifier un motif de nom de fichier, un numéro de début et un numéro de fin après -sequence")
                 return {"demarrerTraitement": False}
-            print("todo")
+            motif_fichier_fusionne = sys.argv[numArgLu+1]
+            debut_sequence = int(sys.argv[numArgLu+2])
+            fin_sequence = int(sys.argv[numArgLu+3])
+            fichiers_sequence = []
+            tabMotif = []
+            nbEtoile=0
+            ssMotif=''
+            for car in motif_fichier_fusionne:
+                if (car == '*'):
+                    if (ssMotif != ''):
+                        tabMotif.append(ssMotif)
+                        ssMotif=''
+                    nbEtoile+=1
+                else:
+                    if (nbEtoile > 0):
+                        tabMotif.append(nbEtoile)
+                        nbEtoile=0
+                    ssMotif+=car
+            if (ssMotif != ''):
+                tabMotif.append(ssMotif)
+            if (nbEtoile > 0):
+                tabMotif.append(nbEtoile)
+            print(tabMotif)
+            for numFichier in range(debut_sequence, fin_sequence+1):
+                nomFichierSequence = ""
+                for ssMotif in tabMotif:
+                    if (type(ssMotif) is int):
+                        nomFichierSequence += str(numFichier).zfill(ssMotif)
+                    else:
+                        nomFichierSequence += ssMotif
+                fichiers_sequence.append(nomFichierSequence) 
+            fichiers_a_fusionner = fichiers_a_fusionner + fichiers_sequence
+            numArgLu += 3
             optionsLues["sequence"] = True
         else:
             if (optionsLues["liste"]):
