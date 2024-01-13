@@ -1,7 +1,7 @@
 # pdf_extract.py
 
 import sys
-from PyPDF2 import PdfFileReader, PdfFileWriter
+from PyPDF2 import PdfReader, PdfWriter
 
 def transformer_expression_fichier(expr_nom_fichiers_extraits):
 	expr_transformee = ""
@@ -21,10 +21,10 @@ def transformer_expression_fichier(expr_nom_fichiers_extraits):
 
 def split(path, expr_nom_fichiers_extraits):
 	expr_transformee = transformer_expression_fichier(expr_nom_fichiers_extraits)
-	pdf = PdfFileReader(path)
-	for page in range(pdf.getNumPages()):
-		pdf_writer = PdfFileWriter()
-		pdf_writer.addPage(pdf.getPage(page))
+	pdf = PdfReader(path)
+	for page in range(len(pdf.pages)):
+		pdf_writer = PdfWriter()
+		pdf_writer.add_page(pdf.pages[page])
 
 		output = expr_transformee.format(n=page)
 		with open(output, 'wb') as output_pdf:
